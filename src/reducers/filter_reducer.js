@@ -56,6 +56,65 @@ const filter_reducer = (state, action) => {
     return { ...state, filtered_products: tempProducts };
   }
 
+  if (action.type === UPDATE_FILTERS) {
+    const { name, value } = action.payload;
+    return { ...state, filters: { ...state.filters, [name]: value } };
+  }
+
+  if (action.type === FILTER_PRODUCTS) {
+    const { all_products } = state;
+    const { text, category, company, color, price, shipping } = state.filters;
+    // before filter anything, always start with a fresh copy of all products
+    let tempProducts = [...all_products];
+    // filtering
+    if (text) {
+      tempProducts = tempProducts.filter((product) =>
+        product.name.toLowerCase().startsWith(text)
+      );
+    }
+    if (category !== "all") {
+      tempProducts = tempProducts.filter(
+        (product) => product.category === category
+      );
+    }
+    if (company !== "all") {
+      tempProducts = tempProducts.filter(
+        (product) => product.company === company
+      );
+    }
+    if (color !== "all") {
+      tempProducts = tempProducts.filter((product) =>
+        product.colors.find((c) => c === color)
+      );
+    }
+
+    tempProducts = tempProducts.filter((product) => product.price <= price);
+
+    if (shipping) {
+      tempProducts = tempProducts.filter(
+        (product) => product.shipping === true
+      );
+    }
+
+    // When done,
+    return { ...state, filtered_products: tempProducts };
+  }
+
+  if (action.type === CLEAR_FILTERS) {
+    return {
+      ...state,
+      filters: {
+        ...state.filters,
+        text: "",
+        company: "all",
+        category: "all",
+        color: "all",
+        price: state.filters.max_price,
+        shipping: false,
+      },
+    };
+  }
+
   throw new Error(`No Matching "${action.type}" - action type`);
 };
 
