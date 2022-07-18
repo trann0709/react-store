@@ -1,4 +1,3 @@
-import { act } from "@testing-library/react";
 import {
   ADD_TO_CART,
   CLEAR_CART,
@@ -24,9 +23,9 @@ const cart_reducer = (state, action) => {
           }
           return { ...cartItem, amount: newAmount };
         } else {
+          return cartItem;
         }
       });
-
       return { ...state, cart: tempCart };
     } else {
       //If not, set up a new item
@@ -72,9 +71,8 @@ const cart_reducer = (state, action) => {
           }
           return { ...item, amount: newAmount };
         }
-      } else {
-        return item; // return item as is
       }
+      return item; // return item as is
     });
     return { ...state, cart: tempCart };
   }

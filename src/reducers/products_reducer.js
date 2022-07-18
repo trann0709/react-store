@@ -1,4 +1,3 @@
-import { act } from "@testing-library/react";
 import {
   SIDEBAR_OPEN,
   SIDEBAR_CLOSE,
